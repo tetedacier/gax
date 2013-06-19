@@ -11,18 +11,15 @@ module.exports = function (rootPath){
     throw("'"+rootPath+"' path does not exists");
   }
 
-
-  function replaceAll(subject, pattern, replacement) {
-    var previousSubjectReplacement = subject;//code
-    var subjectReplacement = subject.replace(pattern, replacement);
-    while (previousSubjectReplacement !== subjectReplacement) {
-      previousSubjectReplacement = subjectReplacement;
-      subjectReplacement = subjectReplacement.replace(pattern, replacement);
-    }
-    return subjectReplacement;
-  }
   function nbLineBeforeOffset(data, offset) {
-    return data.substr(0, offset-1).match(/\n/g).length + 1;
+    var nbLineMatched = data.substr(0, offset-1).match(/\n/g);
+    if (null !== nbLineMatched) {
+      return nbLineMatched.length + 1;
+    }
+    else{
+      //if no new line is matched in the string, it means that the match occurs on the first line
+      return 1;
+    }
   }
   function processFile(relativePath, filePattern, process, callback){
     var
@@ -61,7 +58,6 @@ module.exports = function (rootPath){
     }
   };
   function processPath (relativePath, filePattern, process, callback){
-    //console.log("processPath '" + relativePath + "'");
     fs.readdir(parserDir + ((relativePath !== "")?'/':'') + relativePath, function processPath(err, files){
       for (var i = 0, l = files.length; i < l; i++) {
         processPathComponent(relativePath + files[i], filePattern, process, callback);
@@ -73,7 +69,6 @@ module.exports = function (rootPath){
       if (err) {
         callback({});
       }else{
-        //console.warn("processPathComponent '" + relativePath +"' isDirectory : " + stats.isDirectory());
         if(stats.isDirectory()){
           processPath(("" !== relativePath)?relativePath.replace(/([^/])$/,'$1/'):'', filePattern, process, callback);
         }else{

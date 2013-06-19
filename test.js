@@ -1,9 +1,8 @@
 var fsParser = require('./index.js');
 
-var parserPath = './assets';
 var urlRegExp = '(\\s+|:)url\\s*((\\(("(?<resourceUrlA>[^"]+)"|\'(?<resourceUrlB>[^\']+)\'|(?<resourceUrlC>[^)]+))\\))|("(?<resourceUrlD>[^"]+)")|(\'(?<resourceUrlE>[^\']+)\'))';
-
-(new fsParser(parserPath)).process(
+var cssParser = new fsParser('./assets');
+cssParser.process(
   '*.css',
   urlRegExp,
   function parserCallBack(result){
@@ -19,17 +18,3 @@ var urlRegExp = '(\\s+|:)url\\s*((\\(("(?<resourceUrlA>[^"]+)"|\'(?<resourceUrlB
       + " at line " + result.line);
   }
 );
-/*
-(new fsParser('/Users/fabien/Projects/node/fullStackParser/web')).process(
-  '*.css',
-  '(\\s+|:)url\\s*(\\(("(?<resourceUrl>[^"]+)"|\'(?<resourceUrl>[^\']+)\'|(?<resourceUrl>[^)]+))\\)|"(?<resourceUrl>[^"]+)"|\'(?<resourceUrl>[^\']+)\')',
-  parserCallBack
-);
-*/
-/*
-(new fsParser('/Users/fabien/Projects/node/fullStacarser/web')).process(
-  '*.css',
-  '(\\s+|:)url\\s*(\\(("(?<resourceUrl>[^"]+)"|\'(?<resourceUrl>[^\']+)\'|(?<resourceUrl>[^)]+))\\)|"(?<resourceUrl>[^"]+)"|\'(?<resourceUrl>[^\']+)\')',
-  parserCallBack
-);
-*/
