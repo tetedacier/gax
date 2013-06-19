@@ -1,0 +1,22 @@
+{
+  "name": "gax",
+  "version": "0.0.1",
+  "description": "Grep and execute",
+  "main": "index.js",
+  "scripts": {
+    "test": "test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tetedacier/gax.git"
+  },
+  "keywords": [
+    "grep",
+    "execute"
+  ],
+  "author": "tetedacier",
+  "license": "MIT",
+  "dependencies": {
+    "xregexp": "~2.0.0"
+  }
+}

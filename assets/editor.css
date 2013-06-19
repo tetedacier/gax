@@ -1,0 +1,25 @@
+.ico{
+  font-family: test;
+  background-image: url(/images/test1.png);
+}
+.test-ico-a{
+  background-image: url "/images/test2.png";
+}
+
+.test-ico-b{
+  font-family: test;
+  background-image: url '/images/test3.png';
+}
+.test-ico-c{
+  background-image: url "/images/test4.png";
+}
+.test-ico-d{
+  background-image: url ("/images/test5.png");
+}
+
+.test-ico-e{
+  background-image: url ('/images/test6.png');
+}
+.test-ico-f{
+  background-image: url /images/test7.png;
+}
