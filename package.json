@@ -4,7 +4,7 @@
   "description": "Grep and execute",
   "main": "index.js",
   "scripts": {
-    "test": "test.js"
+    "test": "node tests/index.js"
   },
   "repository": {
     "type": "git",

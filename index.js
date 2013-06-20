@@ -21,6 +21,18 @@ module.exports = function (rootPath){
       return 1;
     }
   }
+  function Pattern(primitive){
+    var reCollection = [];
+    this.match = function(){
+
+    };
+    if(typeof primitive === "string"){
+      var patternCollection = primitive.split(',');
+    }
+    else{
+      var patternCollection = primitive;
+    }
+  }
   function processFile(relativePath, filePattern, process, callback){
     var
       rawData = '',
@@ -81,7 +93,9 @@ module.exports = function (rootPath){
       }
     });
   }
-  this.process = function(filePattern, process, callback){
-    processPathComponent('',filePattern, process, callback);
+  this.process = function(filePattern, process, callback, finalCallBack){
+    processPathComponent('',filePattern, process, callback, function(){
+      finalCallBack();
+    });
   };
 };
