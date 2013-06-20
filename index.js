@@ -5,6 +5,7 @@ var
 module.exports = function (rootPath){
   var parserDir;
   if(fs.existsSync(rootPath)){
+
       parserDir = rootPath;
   }
   else{
@@ -33,12 +34,13 @@ module.exports = function (rootPath){
       var patternCollection = primitive;
     }
   }
-  function processFile(relativePath, filePattern, process, callback){
+  function processFile(relativePath, filePattern, process, callback, finalCallBack){
     var
       rawData = '',
       match,
       realOffset = 0;
     ;
+
     if (
         null !== (parserDir + ((relativePath !== "")?'/':'') + relativePath).match(
           new RegExp(
@@ -62,30 +64,46 @@ module.exports = function (rootPath){
           while (null !== match) {
             realOffset += match.index + match[0].length;
             rawData = data.substr(realOffset);
+
             callback({name: relativePath, matches: match, line: nbLineBeforeOffset(data, realOffset)});
             match = xRegExp.exec(rawData, new xRegExp(process));
           }
+          finalCallBack(relativePath);
         }
       });
+      finalCallBack(relativePath);
     }
   };
-  function processPath (relativePath, filePattern, process, callback){
+  function processPath (relativePath, filePattern, process, callback, finalCallBack){
+    var directoryContent = [];
+    function pathProcessingCallback (name) {
+      directoryContent.splice(directoryContent.indexOf(name.substr(relativePath.length).replace(/\/$/,'')),1);
+      if (directoryContent.length === 0) {
+        finalCallBack(relativePath);
+      }
+    }
     fs.readdir(parserDir + ((relativePath !== "")?'/':'') + relativePath, function processPath(err, files){
-      for (var i = 0, l = files.length; i < l; i++) {
-        processPathComponent(relativePath + files[i], filePattern, process, callback);
+      if (err) {
+        console.warn(err);
+      }else{
+        directoryContent = files;
+        for (var i = 0, l = files.length; i < l; i++) {
+
+          processPathComponent(relativePath + files[i], filePattern, process, callback, pathProcessingCallback);
+        }
       }
     });
   };
-  function processPathComponent(relativePath, filePattern, process, callback) {
+  function processPathComponent(relativePath, filePattern, process, callback, finalCallBack) {
     fs.stat(parserDir + (("" !== relativePath)?'/':'') + relativePath, function(err, stats){
       if (err) {
         callback({});
       }else{
         if(stats.isDirectory()){
-          processPath(("" !== relativePath)?relativePath.replace(/([^/])$/,'$1/'):'', filePattern, process, callback);
+          processPath(("" !== relativePath)?relativePath.replace(/([^/])$/,'$1/'):'', filePattern, process, callback, finalCallBack);
         }else{
           if(stats.isFile()){
-            processFile(relativePath, filePattern, process, callback);
+            processFile(relativePath, filePattern, process, callback, finalCallBack);
           }else{
             //WTF ?
           }
@@ -94,7 +112,7 @@ module.exports = function (rootPath){
     });
   }
   this.process = function(filePattern, process, callback, finalCallBack){
-    processPathComponent('',filePattern, process, callback, function(){
+    processPathComponent('',filePattern, process, callback, function(name){
       finalCallBack();
     });
   };

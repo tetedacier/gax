@@ -1,21 +1,24 @@
-var fsParser = require('../index.js');
-var fs = require('fs');
-var
-  urlRegExp = '(\\s+|:)url\\s*((\\(("(?<resourceUrlA>[^"]+)"|\'(?<resourceUrlB>[^\']+)\'|(?<resourceUrlC>[^)]+))\\))|("(?<resourceUrlD>[^"]+)")|(\'(?<resourceUrlE>[^\']+)\'))'
+var fsParser = require('../index.js')
+  , fs = require('fs')
+  , assert = require('assert')
+  , editorProcessResult = ''
+  , attendedEditorProcessResult = fs.readFileSync("tests/urlCheck.attended-result").toString()
+  , urlRegExp = '(\\s+|:)url\\s*((\\(("(?<resourceUrlA>[^"]+)"|\'(?<resourceUrlB>[^\']+)\'|(?<resourceUrlC>[^)]+))\\))|("(?<resourceUrlD>[^"]+)")|(\'(?<resourceUrlE>[^\']+)\'))'
   , cssParser = new fsParser('./assets')
   , consoleWarn = function (str){
-
+    console.warn(str);
   }
 ;
 function concatenateParserOutput(lineMatch) {
-  editorProcessResult += lineMatch + "/n";
+  editorProcessResult += lineMatch + "\n";
 }
-var editorProcessResult = "";
-var attendedEditorProcessResult = fs.readFileSync("./tests/editor.css-result");
+console.log("checking if all url are matched inside css files ");
+var start = new Date();
 cssParser.process(
   '*.css',
   urlRegExp,
   function parserCallBack(result){
+    console.log('.');
     concatenateParserOutput(
       "'" + result.name + "' contains url definition "
       + (
@@ -29,6 +32,12 @@ cssParser.process(
     );
   },
   function finalCallBack(){
-    assert.deepEqual(editorProcessResult, attendedEditorProcessResult, 'all url are not found');
+    try {
+      assert(editorProcessResult === attendedEditorProcessResult, 'all attend url match are not found');
+    } catch(e) {
+      console.warn(e);
+    }
+    console.log('ok in ' + ((new Date()) - start) + 'ms');
+
   }
 );
