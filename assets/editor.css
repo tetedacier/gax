@@ -1,4 +1,4 @@
-.ico{
+.ico{list-style-image: url(/images/test8.png);
   font-family: test;
   background-image: url(/images/test1.png);
 }
