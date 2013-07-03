@@ -1,13 +1,13 @@
 var fsParser = require('../index.js')
   , fs = require('fs')
   , assert = require('assert')
-  , editorProcessResult = ''
-  , attendedEditorProcessResult = fs.readFileSync("tests/urlCheck.attended-result").toString()
-  , urlRegExp = '(\\s+|:)url\\s*((\\(("(?<resourceUrlA>[^"]+)"|\'(?<resourceUrlB>[^\']+)\'|(?<resourceUrlC>[^)]+))\\))|("(?<resourceUrlD>[^"]+)")|(\'(?<resourceUrlE>[^\']+)\'))'
   , cssParser = new fsParser('./assets')
-  , consoleWarn = function (str){
-    console.warn(str);
-  }
+
+  , editorProcessResult = ''
+  , attendedEditorProcessResult = fs
+    .readFileSync("tests/urlCheck.attended-result")
+    .toString()
+  , urlRegExp = '(\\s+|:)url\\s*((\\(("(?<resourceUrlA>[^"]+)"|\'(?<resourceUrlB>[^\']+)\'|(?<resourceUrlC>[^)]+))\\))|("(?<resourceUrlD>[^"]+)")|(\'(?<resourceUrlE>[^\']+)\'))'
 ;
 function concatenateParserOutput(lineMatch) {
   editorProcessResult += lineMatch + "\n";
@@ -38,6 +38,5 @@ cssParser.process(
       console.warn(e);
     }
     console.log('ok in ' + ((new Date()) - start) + 'ms');
-
   }
 );
