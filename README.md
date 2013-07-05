@@ -3,4 +3,14 @@ GAX
 
 Grep and execute
 
-Crappy test, no documentation, use at your own risk
+Usage
+-----
+
+Testing system
+--------------
+
+```javascript
+a = b;
+```
+
+no documentation

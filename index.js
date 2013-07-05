@@ -51,6 +51,7 @@ module.exports = function (rootPath){
           )
         )
     ){
+
       fs.readFile(parserDir + ((relativePath !== "")?'/':'') + relativePath, function(err, data){
         if (err) {
           throw(
@@ -60,6 +61,12 @@ module.exports = function (rootPath){
         }
         else{
           rawData = data = data.toString();
+          console.warn('++',relativePath,
+            filePattern
+              .replace(/\*/,'.*')
+              .replace(/\?/,'.?')
+            + "$"
+          );
           match = xRegExp.exec(rawData, new xRegExp(process));
           while (null !== match) {
             realOffset += match.index + match[0].length;
@@ -112,6 +119,9 @@ module.exports = function (rootPath){
     });
   }
   this.process = function(filePattern, process, callback, finalCallBack){
+    console.log(process.toString());
+    console.log(callback.toString());
+    console.log(finalCallBack.toString());
     processPathComponent('',filePattern, process, callback, function(name){
       finalCallBack();
     });
